@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">ExpenseTracker</string>
+
+    <!-- Constants -->
+
+    <string name="enter_name">Enter Full Name...</string>
+    <string name="enter_ph">Enter Phone Number...</string>
+    <string name="enter_pass">Enter Password...</string>
+    <string name="con_pass">Confirm Password...</string>
+    <string name="signin">Sign In</string>
+    <string name="signup">Sign Up</string>
+    <string name="signout">Sign Out</string>
+    <string name="forgot_pass">Forgot Password ?</string>
+    <string name="confirm">Confirm</string>
+    <string name="otp">Enter OTP...</string>
+    <string name="greet">Welcome, </string>
+    <string name="expense">Expense: </string>
+    <string name="savings">Savings: </string>
+    <string name="limit">Limit: </string>
+    <string name="add">Add Expense</string>
+    <string name="view">View Statement</string>
+    <string name="change">Change Limit</string>
+    <string name="resend">Resend OTP ?</string>
+    <string name="date">Date:</string>
+    <string name="a_expense">Enter Expense...</string>
+    <string name="description">Description:</string>
+    <string name="a_description">Enter Description...</string>
+    <string name="update">Update Expense</string>
+    <string name="delete">Delete Expense</string>
+    <string name="currentLimit">Current Limit: </string>
+    <string name="newLimit">Enter New Limit...</string>
+    <string name="graph">Graph</string>
+    <string name="search">Search</string>
+    <string name="searchquery">Search Query...</string>
+    <string name="newPass">Enter New Password...</string>
+    <!-- Constants -->
+</resources>
