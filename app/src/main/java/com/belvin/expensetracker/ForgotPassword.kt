@@ -1,11 +1,11 @@
 package com.belvin.expensetracker
 
 import android.Manifest
-import android.content.ContentValues
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Telephony
+import android.telephony.SmsManager
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -19,6 +19,17 @@ class ForgotPassword : AppCompatActivity() {
     lateinit var otp:String
     lateinit var msg:String
     val SMS_PERMISSION_CODE = 1
+
+    val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if(Telephony.Sms.Intents.SMS_RECEIVED_ACTION == intent?.action)
+            {
+                val msg = Telephony.Sms.Intents.getMessagesFromIntent(intent)[0].displayMessageBody.substring(0..5)
+                otpText.setText(msg)
+
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.forgot_password)
@@ -39,6 +50,7 @@ class ForgotPassword : AppCompatActivity() {
                 sendOTP(forgot_phone.text.toString(),msg)
                 otpGrp.visibility = View.VISIBLE
                 Toast.makeText(this, "OTP will arrive in a few seconds...", Toast.LENGTH_SHORT).show()
+                confirm.isEnabled = false
             }
             else
             {
@@ -89,6 +101,17 @@ class ForgotPassword : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        registerReceiver(receiver, IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION))
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
+    }
+
     fun sendOTP(num:String,msg:String)
     {
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.SEND_SMS) +
@@ -96,8 +119,8 @@ class ForgotPassword : AppCompatActivity() {
             ContextCompat.checkSelfPermission(this,Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED)
         {
             Toast.makeText(applicationContext, "Permission Granted", Toast.LENGTH_SHORT).show()
-            /*val smsmanager = SmsManager.getDefault()
-            smsmanager.sendTextMessage(num,"Expense Tracker",msg,null,null)*/
+            val smsmanager = SmsManager.getDefault()
+            smsmanager.sendTextMessage(num,"Expense Tracker",msg,null,null)
 
         }
         else
