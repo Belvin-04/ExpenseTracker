@@ -2,10 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.belvin.expensetracker">
 
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="true"
@@ -14,10 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".GroupStatement"></activity>
+        <activity android:name=".AddUpdateGrp" />
+        <activity android:name=".AddTripDetails" />
+        <activity android:name=".AddTrip" />
+        <activity android:name=".AddGroup" />
+        <activity android:name=".GroupHome" />
         <activity
             android:name=".Statement"
-            android:parentActivityName=".Home"/>
+            android:parentActivityName=".Home" />
         <activity
             android:name=".GraphRepresentation"
             android:parentActivityName=".Statement" />
@@ -27,7 +31,7 @@
         <activity
             android:name=".AddUpdateExpense"
             android:parentActivityName=".Home" />
-        <activity android:name=".Home"/>
+        <activity android:name=".Home" />
         <activity
             android:name=".ForgotPassword"
             android:parentActivityName=".Signin" />

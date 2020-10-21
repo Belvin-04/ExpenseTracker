@@ -67,7 +67,7 @@ class Statement : AppCompatActivity(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId)
         {
-            R.id.graph -> startActivity(Intent(this,GraphRepresentation::class.java))
+            R.id.graph -> startActivity(Intent(this,GraphRepresentation::class.java).putExtra("AccountType","Personal"))
         }
         return super.onOptionsItemSelected(item)
     }
@@ -79,9 +79,9 @@ class Statement : AppCompatActivity(){
         while(cur.moveToNext())
         {
             expenseValues.add( "\nId: "+cur.getInt(0).toString()+"\n"+
-                    "Date: "+cur.getString(2)+"/"+ cur.getString(3)+"/"+ cur.getString(4)+"\n"+
-                    "Price: "+cur.getInt(5).toString()+" Rs.\n"+
-                    "Description: "+cur.getString(6)+"\n")
+                    "Date: "+cur.getString(3)+"/"+ cur.getString(4)+"/"+ cur.getString(5)+"\n"+
+                    "Price: "+cur.getInt(6).toString()+" Rs.\n"+
+                    "Description: "+cur.getString(7)+"\n")
         }
 
         val myadapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,expenseValues)

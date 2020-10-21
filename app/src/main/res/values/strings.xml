@@ -33,5 +33,16 @@
     <string name="search">Search</string>
     <string name="searchquery">Search Query...</string>
     <string name="newPass">Enter New Password...</string>
+    <string name="grpBtn">Group Button Menu</string>
+    <string name="perBtn">Person Button Menu</string>
+    <string name="addTrip">Add Trip</string>
+    <string name="addTripName">Enter Trip Name ...</string>
+    <string name="addTripSize">Enter Trip Members ...</string>
+    <string name="addTripBudget">Enter Trip Budget ...</string>
+    <string name="addMember">Add Member</string>
+    <string name="membername">1. Member Name</string>
+    <string name="endTrip">End Trip</string>
+    <string name="split">Split Bill</string>
+    <string name="dividedAmount">Divided Amount : </string>
     <!-- Constants -->
 </resources>

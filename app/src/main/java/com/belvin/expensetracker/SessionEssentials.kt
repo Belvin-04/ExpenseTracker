@@ -6,6 +6,8 @@ class SessionEssentials {
        var CURRENT_USER_ID = 0
        var OPERATION = ""
        var OTP = ""
+       var CURRENT_TRIP_ID = 0
+       var EXPENSE_MADE = 0
 
    }
 

@@ -1,5 +1,6 @@
 package com.belvin.expensetracker
 
+import android.database.Cursor
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.PieData
@@ -12,7 +13,7 @@ import java.util.*
 class GraphRepresentation : AppCompatActivity() {
 
     val currentUserId = SessionEssentials.CURRENT_USER_ID
-
+    lateinit var cur:Cursor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.graph_representation)
@@ -22,12 +23,22 @@ class GraphRepresentation : AppCompatActivity() {
 
         val db = ExpenseTrackerDB(applicationContext).readableDatabase
 
-        val cur = db.rawQuery("SELECT * FROM Expense WHERE Userid = ?", arrayOf(currentUserId.toString()))
+        val graphdata = intent.extras?.getString("AccountType")
+
+        if(graphdata == "Personal")
+        {
+            cur = db.rawQuery("SELECT * FROM Expense WHERE Userid = ?", arrayOf(currentUserId.toString()))
+        }
+        else
+        {
+            cur = db.rawQuery("SELECT * FROM Expense WHERE TripId = ?", arrayOf(SessionEssentials.CURRENT_TRIP_ID.toString()))
+        }
+
 
         while(cur.moveToNext())
         {
-            Expenses.add(cur.getInt(5).toFloat())
-            Desc.add(cur.getString(6))
+            Expenses.add(cur.getInt(6).toFloat())
+            Desc.add(cur.getString(7))
         }
 
         val entries = ArrayList<PieEntry>()

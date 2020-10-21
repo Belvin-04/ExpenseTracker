@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddTripDetails">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/memberGrp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="AddMemberBtn,tripMemberName"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/tripName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/addTripName"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/tripSize"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/addTripSize"
+        android:inputType="number"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tripName" />
+
+    <EditText
+        android:id="@+id/tripBudget"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/addTripBudget"
+        android:inputType="number"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tripSize" />
+
+    <Button
+        android:id="@+id/AddTripDetailsBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/addTrip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tripBudget" />
+
+    <EditText
+        android:id="@+id/tripMemberName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100sp"
+        android:hint="@string/membername"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AddTripDetailsBtn" />
+
+    <Button
+        android:id="@+id/AddMemberBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/addMember"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tripMemberName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
