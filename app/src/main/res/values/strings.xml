@@ -44,5 +44,8 @@
     <string name="endTrip">End Trip</string>
     <string name="split">Split Bill</string>
     <string name="dividedAmount">Divided Amount : </string>
+    <string name="impBtn">Import</string>
+    <string name="expBtn">Export</string>
+    <string name="impExpBtn">Import Export Menu</string>
     <!-- Constants -->
 </resources>

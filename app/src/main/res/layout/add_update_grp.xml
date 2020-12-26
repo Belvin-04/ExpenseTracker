@@ -7,6 +7,13 @@
     tools:context=".AddUpdateGrp">
 
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/editGrp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="GrpExpenseUpdateBtn,GrpExpenseDeleteBtn"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/GrpOperation"
         android:layout_width="wrap_content"
@@ -24,7 +31,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/GrpOperation"
-        tools:listitem="@android:layout/simple_dropdown_item_1line" />
+        tools:listitem="@android:layout/simple_dropdown_item_1line"
+        />
 
     <EditText
         android:id="@+id/GrpDescription"
@@ -62,6 +70,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/GrpExpenseAddBtn"
         android:text="@string/update"
-        android:visibility="gone"/>
+        />
+    <Button
+        android:id="@+id/GrpExpenseDeleteBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/GrpExpenseUpdateBtn"
+        android:text="@string/delete"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

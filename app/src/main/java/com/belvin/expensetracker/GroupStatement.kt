@@ -79,12 +79,26 @@ class GroupStatement : AppCompatActivity() {
             }
 
             ExpenseData.add( "\nId: "+cur.getInt(0).toString()+"\n"+
-                    "Name:" +name+"\n"+
+                    "Name: " +name+"\n"+
                     "Price: "+cur.getInt(6).toString()+" Rs.\n"+
                     "Description: "+cur.getString(7)+"\n")
         }
         val myadapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,ExpenseData)
         grpStatement.adapter = myadapter
+        grpStatement.setOnItemClickListener { parent, view, position, id ->
+            val str = parent.getItemAtPosition(position).toString().split("\n")
+            val id = str[1].substring(4)
+            val name = str[2].substring(6)
+            val price = str[3].substring(7,str[3].length-4)
+            val desc = str[4].substring(13)
+
+            SessionEssentials.GRP_OPERATION = "Edit Expense"
+            startActivity(Intent(this,AddUpdateGrp::class.java)
+                .putExtra("Id",id)
+                .putExtra("Name",name)
+                .putExtra("Price",price)
+                .putExtra("Desc",desc))
+        }
     }
 
     private fun dividedStatement()
@@ -97,7 +111,7 @@ class GroupStatement : AppCompatActivity() {
             dividedExpense = SessionEssentials.EXPENSE_MADE / cur.getInt(0)
         }
 
-        splitExpense.setText("Divided Amount : "+dividedExpense.toString()+" Rs.")
+        splitExpense.setText("Divided Amount : $dividedExpense Rs.")
         cur = db.rawQuery("SELECT * FROM LimitAndLogged WHERE Id IN (SELECT Id FROM Users WHERE TripId = ?)", arrayOf(SessionEssentials.CURRENT_TRIP_ID.toString()))
 
         var name = ""
@@ -129,5 +143,6 @@ class GroupStatement : AppCompatActivity() {
         }
         val myadapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,ExpenseData)
         grpStatement.adapter = myadapter
+        grpStatement.setOnItemClickListener(null)
     }
 }

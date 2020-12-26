@@ -6,23 +6,28 @@ import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.group_home.*
+import java.io.File
 
 class GroupHome : AppCompatActivity() {
 
     lateinit var db:SQLiteDatabase
     lateinit var cur:Cursor
+    lateinit var trip:Trip
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.group_home)
 
         add.setOnClickListener {
+            SessionEssentials.GRP_OPERATION = "Add Expense"
             startActivity(Intent(this,AddUpdateGrp::class.java))
         }
         view.setOnClickListener {
@@ -55,8 +60,52 @@ class GroupHome : AppCompatActivity() {
                         dialog.dismiss()
                     }).show()
             }
+
+            R.id.exportBtn -> {
+                export()
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun export()
+    {
+        val memberList = ArrayList<Member>()
+        val expenseList = ArrayList<Expense>()
+        val expenseCur = db.rawQuery("SELECT Userid,Price,Description FROM Expense WHERE TripId = ?", arrayOf(SessionEssentials.CURRENT_TRIP_ID.toString()))
+        val tripCur = db.rawQuery("SELECT TripName,TotalTripMembers,TripBudget FROM Trips WHERE CurrentTrip = ?", arrayOf("1"))
+        val userCur = db.rawQuery("SELECT Name FROM Users WHERE TripId = ?", arrayOf(SessionEssentials.CURRENT_TRIP_ID.toString()))
+
+        if(tripCur.moveToFirst())
+        {
+            trip = Trip(tripCur.getString(0),tripCur.getInt(1),tripCur.getInt(2))
+        }
+
+        while (expenseCur.moveToNext())
+        {
+            val expUserCur = db.rawQuery("SELECT Name FROM Users WHERE TripId = ? AND Id = ?",
+                arrayOf(SessionEssentials.CURRENT_TRIP_ID.toString(),expenseCur.getString(0)))
+            var name = ""
+            if(expUserCur.moveToFirst())
+            {
+                name = expUserCur.getString(0)
+            }
+            expenseList.add(Expense(name,expenseCur.getInt(1),expenseCur.getString(2)))
+        }
+        while (userCur.moveToNext())
+        {
+            memberList.add(Member(userCur.getString(0)))
+        }
+
+        val tripDetails = TripDetails(trip,memberList,expenseList)
+        val gson = Gson()
+        val data = gson.toJson(tripDetails)
+
+        val f = File(Environment.getExternalStorageDirectory().toString()+"/ExpenseTracker/data.json")
+        f.createNewFile()
+        f.writeText(data)
+
+        Toast.makeText(this, "Data exported successfully..!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
