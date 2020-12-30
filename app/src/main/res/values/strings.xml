@@ -47,5 +47,6 @@
     <string name="impBtn">Import</string>
     <string name="expBtn">Export</string>
     <string name="impExpBtn">Import Export Menu</string>
+    <string name="totalAmount">Total Amount : </string>
     <!-- Constants -->
 </resources>

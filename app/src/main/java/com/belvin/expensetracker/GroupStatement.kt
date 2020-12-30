@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.group_statement.*
 
 class GroupStatement : AppCompatActivity() {
 
+    val listOfReceivers = mutableListOf<Person>()
+    val listOfGivers = mutableListOf<Person>()
     lateinit var db:SQLiteDatabase
     lateinit var cur:Cursor
     val ExpenseData = mutableListOf<String>()
@@ -54,12 +56,14 @@ class GroupStatement : AppCompatActivity() {
         if(check==0)
         {
             splitExpense.visibility = View.VISIBLE
+            totalExpense.visibility = View.VISIBLE
             dividedStatement()
             check = 1
         }
         else
         {
             splitExpense.visibility = View.GONE
+            totalExpense.visibility = View.GONE
             normalStatement()
             check = 0
         }
@@ -112,6 +116,7 @@ class GroupStatement : AppCompatActivity() {
         }
 
         splitExpense.setText("Divided Amount : $dividedExpense Rs.")
+        totalExpense.setText("Total Amount : ${SessionEssentials.EXPENSE_MADE} Rs.")
         cur = db.rawQuery("SELECT * FROM LimitAndLogged WHERE Id IN (SELECT Id FROM Users WHERE TripId = ?)", arrayOf(SessionEssentials.CURRENT_TRIP_ID.toString()))
 
         var name = ""
@@ -135,14 +140,85 @@ class GroupStatement : AppCompatActivity() {
                 recAmt = 0
             }
 
-            ExpenseData.add( "\nId: "+cur.getInt(0).toString()+"\n"+
-                    "Name: "+name+"\n"+
-                    "Total Paid: "+cur.getInt(2).toString()+" Rs.\n"+
-                    "Amount to Pay: "+payAmt+" Rs."+"\n"+
-                    "Amount to Receive: "+recAmt+" Rs."+"\n")
+            if(payAmt!=0)
+            {
+                listOfGivers.add(Person(name,payAmt, mutableListOf(), mutableListOf(),payAmt,recAmt,cur.getInt(2)))
+            }
+            else
+            {
+                listOfReceivers.add(Person(name,recAmt, mutableListOf(), mutableListOf(),payAmt,recAmt,cur.getInt(2)))
+            }
         }
+        val list = calculate(listOfGivers,listOfReceivers)
+
+        for(item in list)
+        {
+
+            var s = "\n"
+
+            if(item.toList.isNotEmpty())
+            {
+                for(i in item.toList)
+                {
+                    s = s + i + "\n"
+                }
+            }
+            if(item.fromList.isNotEmpty())
+            {
+                for(i in item.fromList)
+                {
+                    s = s + i + "\n"
+                }
+            }
+
+            if(item.pAmt == 0)
+            {
+                ExpenseData.add(
+                    "Name: "+item.name+"\n"+
+                            "Total Paid: "+item.totalPaid+" Rs.\n"+
+                            "Amount to Receive: "+item.rAmt+" Rs."+"\n"+
+                            s)
+            }
+            else
+            {
+                ExpenseData.add(
+                    "Name: "+item.name+"\n"+
+                            "Total Paid: "+item.totalPaid+" Rs.\n"+
+                            "Amount to Pay: "+item.pAmt+" Rs."+"\n"+
+                            s)
+            }
+        }
+
         val myadapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,ExpenseData)
         grpStatement.adapter = myadapter
         grpStatement.setOnItemClickListener(null)
+    }
+
+    private fun calculate(listOfGivers: MutableList<Person>, listOfReceivers: MutableList<Person>):List<Person> {
+
+        for(receiver in listOfReceivers)
+        {
+            for(giver in listOfGivers)
+            {
+                if((receiver.amt <= giver.amt) && (receiver.amt != 0))
+                {
+                    receiver.fromList.add("Receive from ${giver.name}: ${receiver.amt} Rs.")
+                    giver.toList.add("Pay to ${receiver.name}: ${receiver.amt} Rs.")
+                    giver.amt -= receiver.amt
+                    receiver.amt = 0
+                    continue
+                }
+                else if((receiver.amt > giver.amt) && (giver.amt != 0))
+                {
+                    receiver.fromList.add("Receive from ${giver.name}: ${giver.amt} Rs.")
+                    giver.toList.add("Pay to ${receiver.name}: ${giver.amt} Rs.")
+                    receiver.amt -= giver.amt
+                    giver.amt = 0
+                    continue
+                }
+            }
+        }
+
+        return (listOfGivers+listOfReceivers)
     }
 }

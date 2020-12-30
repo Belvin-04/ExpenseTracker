@@ -59,14 +59,7 @@ class Signin : AppCompatActivity() {
         {
             R.id.grpBtn -> {
 
-                if(tripExists())
-                {
-                    startActivity(Intent(this,GroupHome::class.java))
-                }
-                else
-                {
                     startActivity(Intent(this,AddTrip::class.java))
-                }
 
             }
         }
@@ -77,17 +70,6 @@ class Signin : AppCompatActivity() {
     private fun encrypt(password:String):String
     {
         return AESCrypt.encrypt("com.packageName.applicationName", password)
-    }
-
-    private fun tripExists():Boolean
-    {
-        cur = db.rawQuery("SELECT Id FROM Trips WHERE CurrentTrip = ?", arrayOf("1"))
-        if(cur.moveToFirst())
-        {
-            SessionEssentials.CURRENT_TRIP_ID = cur.getInt(0)
-            return true
-        }
-        return false
     }
 
     private fun resetFields()

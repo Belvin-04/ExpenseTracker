@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -22,6 +24,7 @@ import java.io.FileReader
 class AddTrip : AppCompatActivity() {
     lateinit var cur: Cursor
     lateinit var db: SQLiteDatabase
+    val tripList = mutableListOf<String>()
     val cv = ContentValues()
     var currentTripId = 0
     var addingUser = 0
@@ -32,7 +35,51 @@ class AddTrip : AppCompatActivity() {
         db = ExpenseTrackerDB(this).readableDatabase
 
         addTripBtn.setOnClickListener {
-            startActivity(Intent(this, AddTripDetails::class.java))
+            val b = it as Button
+            if(b.text == "Add Trip")
+            {
+                startActivity(Intent(this, AddTripDetails::class.java))
+            }
+            else
+            {
+                startActivity(Intent(this, GroupHome::class.java))
+            }
+
+        }
+
+        if(tripExists())
+        {
+            addTripBtn.setText("Current Trip")
+        }
+
+        cur = db.rawQuery("SELECT * FROM Trips WHERE CurrentTrip = ?", arrayOf("0"))
+
+        while (cur.moveToNext())
+        {
+            var memberNameString = ""
+            val memberNameCur = db.rawQuery("SELECT Name FROM Users WHERE TripId = ?", arrayOf(cur.getString(0)))
+
+            while(memberNameCur.moveToNext())
+            {
+                memberNameString += memberNameCur.getString(0)+", "
+                if(memberNameCur.isLast)
+                {
+                    memberNameString = memberNameString.substring(0..memberNameString.length-3)
+                }
+            }
+
+            tripList.add("Trip Id: ${cur.getInt(0)} \n" +
+                    "Trip to: ${cur.getString(1)} \n" +
+                    "Members Name: (${memberNameString}) \n"+
+                    "Total Members: ${cur.getInt(2)} \n"+
+                    "Trip Budget: ${cur.getInt(3)} \n")
+        }
+
+        prevTrips.adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,tripList)
+
+        prevTrips.setOnItemClickListener { parent, view, position, id ->
+            SessionEssentials.CURRENT_TRIP_ID = tripList[position].split("\n")[0].substring(8).trim().toInt()
+            startActivity(Intent(this,GroupHome::class.java))
         }
 
     }
@@ -57,7 +104,17 @@ class AddTrip : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-
+    private fun tripExists():Boolean
+    {
+        cur = db.rawQuery("SELECT Id FROM Trips WHERE CurrentTrip = ?", arrayOf("1"))
+        if(cur.moveToFirst())
+        {
+            SessionEssentials.CURRENT_TRIP_ID = cur.getInt(0)
+            SessionEssentials.TEMP_TRIP_ID = SessionEssentials.CURRENT_TRIP_ID
+            return true
+        }
+        return false
+    }
 
 
     private fun import() {
